@@ -1,13 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>GTNEra ENS Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="data.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GTNEra ENS Dashboard</title>
+  <style>
+    body {
+      font-family: Inter, sans-serif;
+      padding: 2rem;
+      background-color: #f4f4f4;
+      color: #222;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background-color: #fff;
+    }
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #eee;
+    }
+    tfoot td {
+      font-weight: bold;
+      background-color: #fafafa;
+    }
+  </style>
 </head>
 <body>
-    <h1>GTNEra ENS Dashboard</h1>
-    <div id="dashboard"></div>
+  <h1>GTNEra ENS Dashboard</h1>
+  <p>Live overview of your ENS portfolio</p>
+
+  <table id="ensTable">
+    <thead>
+      <tr>
+        <th>Domain</th>
+        <th>Value (USD)</th>
+        <th>Expiry</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot>
+      <tr>
+        <td>Total</td>
+        <td id="totalValue">$0</td>
+        <td>—</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <script src="data.js"></script>
+  <script>
+    const tbody = document.querySelector("#ensTable tbody");
+    const totalField = document.getElementById("totalValue");
+    let total = 0;
+
+    ensDomains.forEach(domain => {
+      const tr = document.createElement("tr");
+
+      const nameCell = document.createElement("td");
+      nameCell.textContent = domain.name;
+      tr.appendChild(nameCell);
+
+      const priceCell = document.createElement("td");
+      priceCell.textContent = `$${domain.price.toLocaleString()}`;
+      tr.appendChild(priceCell);
+
+      const expiryCell = document.createElement("td");
+      expiryCell.textContent = domain.expiry || "—";
+      tr.appendChild(expiryCell);
+
+      tbody.appendChild(tr);
+      total += domain.price;
+    });
+
+    totalField.textContent = `$${total.toLocaleString()}`;
+  </script>
 </body>
 </html>
